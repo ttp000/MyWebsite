@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WebApplication1.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>List of Employee</h4>
+<table class="table table-bordered">
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Date of Birth</th>
+        <th>City</th>
+        <th>Salary</th>
+        <th>Department</th>
+    </tr>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => e.FName)</td>
+            <td>@Html.DisplayFor(modelItem => e.LName)</td>
+            <td>@Html.DisplayFor(modelItem => e.DateOfBirth)</td>
+            <td>@Html.DisplayFor(modelItem => e.City)</td>
+            <td>@Html.DisplayFor(modelItem => e.Salary)</td>
+            <td>@Html.DisplayFor(modelItem => e.Department.Name)</td>
+
+            
+        </tr>
+    }
+</table>
+
