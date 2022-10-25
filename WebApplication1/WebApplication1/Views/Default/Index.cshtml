@@ -5,6 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h4>Test React on Website</h4>
+
+<p id="txtReact">
+    
+</p>
+
 <h4>List of Employee</h4>
 <table class="table table-bordered">
     <tr>
@@ -29,4 +35,11 @@
         </tr>
     }
 </table>
+
+@*@Scripts.Render("~/bundles/react")*@
+@section scripts{ 
+<script type="text/babel" src="~/Scripts/react1.jsx">
+    
+</script>
+    }
 
