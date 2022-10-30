@@ -7,18 +7,34 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication1.DAL;
+using WebApplication1.ImplementRepositories;
 using WebApplication1.Models;
+using WebApplication1.Repositories;
 
 namespace WebApplication1.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private Model1 db = new Model1();
+        private readonly IDepartmentRepository departmentRepository;
 
+        public DepartmentsController() : this(new DepartmentRepository())
+        {
+        }
+        public DepartmentsController(IDepartmentRepository departmentRepository)
+        {
+            this.departmentRepository = departmentRepository;
+        }
         // GET: Departments
         public ActionResult Index()
         {
-            return View(db.Departments.ToList());
+            var department = departmentRepository.GetAllDepartment();
+
+            if (department == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(department);
         }
 
         // GET: Departments/Details/5
@@ -28,7 +44,7 @@ namespace WebApplication1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Department department = db.Departments.Find(id);
+            Department department = departmentRepository.GetDepartmentById(id);
             if (department == null)
             {
                 return HttpNotFound();
@@ -51,11 +67,10 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Departments.Add(department);
-                db.SaveChanges();
+                departmentRepository.CreateDepartment(department);
+                departmentRepository.Save();
                 return RedirectToAction("Index");
             }
-
             return View(department);
         }
 
@@ -66,7 +81,7 @@ namespace WebApplication1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Department department = db.Departments.Find(id);
+            Department department = departmentRepository.GetDepartmentById(id);
             if (department == null)
             {
                 return HttpNotFound();
@@ -83,8 +98,9 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(department).State = EntityState.Modified;
-                db.SaveChanges();
+                departmentRepository.UpdateDepartment(department);
+                departmentRepository.Save();
+
                 return RedirectToAction("Index");
             }
             return View(department);
@@ -97,7 +113,7 @@ namespace WebApplication1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Department department = db.Departments.Find(id);
+            Department department = departmentRepository.GetDepartmentById(id);
             if (department == null)
             {
                 return HttpNotFound();
@@ -110,18 +126,15 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Department department = db.Departments.Find(id);
-            db.Departments.Remove(department);
-            db.SaveChanges();
+            Department department = departmentRepository.GetDepartmentById(id);
+            departmentRepository.DeleteDepartment(id);
+            departmentRepository.Save();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            departmentRepository.Dispose();
             base.Dispose(disposing);
         }
     }

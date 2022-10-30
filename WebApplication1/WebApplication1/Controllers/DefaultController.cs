@@ -14,15 +14,12 @@ namespace WebApplication1.Controllers
         public ActionResult Index()
         {
             // ADO.Net 
-            var emp = from e in db.Employees
-                      join d in db.Departments
-                      on e.DepartmentId equals d.Id
-                      select e;
-
+            
             // Entity Framework
             //var emp1 = db.Employees.Include(x => x.Department);
 
-            return View(emp.ToList());
+            return View();
         }
+        
     }
 }
